@@ -1,0 +1,7 @@
+[package]
+name = "_100_doors"
+version = "0.1.0"
+authors = ["mtXTJocj <mtXTJocj@yahoo.co.jp>"]
+edition = "2018"
+
+[dependencies]
