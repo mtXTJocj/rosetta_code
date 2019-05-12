@@ -2,5 +2,6 @@
 members = [
     "_100_doors",
     "a_plus_b",
+    "bitmap",
     "execute_brainxxxx",
 ]
