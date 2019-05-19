@@ -1,3 +1,6 @@
+use std::fs::File;
+use std::io::{BufWriter, Result, Write};
+
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub struct Color {
     r: u8,
@@ -40,27 +43,51 @@ impl Bitmap {
         }
     }
 
-    pub fn get(&self, x: usize, y: usize) -> &Color {
+    pub fn color(&self, x: usize, y: usize) -> &Color {
         let idx = self.width * y + x;
         &self.image[idx]
     }
 
-    pub fn get_mut(&mut self, x: usize, y: usize) -> &mut Color {
+    pub fn color_mut(&mut self, x: usize, y: usize) -> &mut Color {
         let idx = self.width * y + x;
         &mut self.image[idx]
     }
+
+    pub fn write_ppm(&self, out: &mut Write) -> Result<()> {
+        let header = format!("P6\n{} {}\n255\n", self.width(), self.height());
+        out.write(header.as_bytes())?;
+
+        for c in &self.image {
+            out.write(&[c.r, c.g, c.b])?;
+        }
+
+        Ok(())
+    }
+}
+
+fn print_usage(name: &str) {
+    println!("Usage: {} filename", name);
 }
 
 fn main() {
+    let args: Vec<String> = std::env::args().collect();
+    if args.len() < 2 {
+        debug_assert!(args.len() == 1);
+        print_usage(&args[0]);
+        return;
+    }
+
+    let f = File::create(&args[1]).expect(&format!("{} cannot be created.", args[1]));
+    let mut f = BufWriter::new(f);
+
     let mut bmp = Bitmap::new(300, 400);
 
-    println!("{:?}", bmp.get(10, 20));
     bmp.fill(Color::new(128, 64, 255));
-    println!("{:?}", bmp.get(10, 20));
     for x in 10..100 {
-        *bmp.get_mut(x, 20) = Color::new(255, 255, 255);
+        *bmp.color_mut(x, 20) = Color::new(255, 255, 255);
     }
-    println!("{:?}", bmp.get(10, 20));
+
+    bmp.write_ppm(&mut f).expect("write PPM failed.");
 }
 
 #[cfg(test)]
@@ -72,17 +99,17 @@ mod tests {
         let mut bmp = Bitmap::new(10, 20);
         bmp.fill(Color::new(0, 128, 255));
 
-        assert_eq!(Color::new(0, 128, 255), *bmp.get(0, 0));
-        assert_eq!(Color::new(0, 128, 255), *bmp.get(5, 10));
-        assert_eq!(Color::new(0, 128, 255), *bmp.get(9, 19));
+        assert_eq!(Color::new(0, 128, 255), *bmp.color(0, 0));
+        assert_eq!(Color::new(0, 128, 255), *bmp.color(5, 10));
+        assert_eq!(Color::new(0, 128, 255), *bmp.color(9, 19));
     }
 
     #[test]
     fn test_set() {
         let mut bmp = Bitmap::new(10, 20);
-        *bmp.get_mut(2, 3) = Color::new(255, 128, 0);
+        *bmp.color_mut(2, 3) = Color::new(255, 128, 0);
 
-        assert_eq!(Color::new(0, 0, 0), *bmp.get(0, 0));
-        assert_eq!(Color::new(255, 128, 0), *bmp.get(2, 3));
+        assert_eq!(Color::new(0, 0, 0), *bmp.color(0, 0));
+        assert_eq!(Color::new(255, 128, 0), *bmp.color(2, 3));
     }
 }
