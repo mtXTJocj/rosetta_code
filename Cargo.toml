@@ -4,4 +4,5 @@ members = [
     "a_plus_b",
     "bitmap",
     "execute_brainxxxx",
+    "lexical_analyzer",
 ]
