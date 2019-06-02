@@ -178,6 +178,11 @@ impl fmt::Display for Token {
                 "{} {} String {:?}",
                 self.line_number, self.column_number, s
             ),
+            TokenKind::EndOfInput => write!(
+                f,
+                "{} {} String End_of_input",
+                self.line_number, self.column_number
+            ),
             _ => write!(
                 f,
                 "{} {} {:?}",
