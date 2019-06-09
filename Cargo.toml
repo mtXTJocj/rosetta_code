@@ -5,4 +5,5 @@ members = [
     "bitmap",
     "execute_brainxxxx",
     "lexical_analyzer",
+    "syntax_analyzer",
 ]
