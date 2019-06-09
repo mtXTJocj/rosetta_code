@@ -8,7 +8,7 @@ pub type Result<T> = result::Result<T, CompileError>;
 pub enum ErrorKind {
     ReadError,
     LexicalAnalyzerError,
-    ParseError,
+    SyntaxError,
 }
 
 #[derive(Debug)]
