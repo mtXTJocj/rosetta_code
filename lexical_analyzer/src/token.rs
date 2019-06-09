@@ -384,7 +384,7 @@ impl fmt::Display for Token {
             ),
             TokenKind::EndOfInput => write!(
                 f,
-                "{} {} String End_of_input",
+                "{} {} End_of_input",
                 self.line_number, self.column_number
             ),
             _ => write!(
