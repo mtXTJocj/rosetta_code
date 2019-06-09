@@ -4,7 +4,7 @@ use lexical_analyzer::LexicalAnalyzer;
 
 use std::env;
 use std::fs::File;
-use std::io::{stdin, stdout, BufReader, BufWriter, Read, Write};
+use std::io::{stdin, stdout, BufRead, BufReader, BufWriter, Write};
 
 fn analyze(src: String, out: &mut Write) -> Result<()> {
     let mut lex = LexicalAnalyzer::new(src.chars());
@@ -22,37 +22,24 @@ fn analyze(src: String, out: &mut Write) -> Result<()> {
 }
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let mut str_in = String::new();
-
-    match args.len() {
-        1 => {
-            stdin()
-                .lock()
-                .read_to_string(&mut str_in)
-                .expect("read failed.");
-            let out = stdout();
-            let mut out_lock = out.lock();
-            analyze(str_in, &mut out_lock).expect("lexcal analyzer failed.");
-        }
-        2 => {
-            let f = File::open(&args[1]).expect("open error");
-            let mut f = BufReader::new(f);
-            f.read_to_string(&mut str_in).expect("file read error");
-
-            let out = stdout();
-            let mut out_lock = out.lock();
-            analyze(str_in, &mut out_lock).expect("lexcal analyzer failed.");
-        }
-        3 => {
-            let f = File::open(&args[1]).expect("open error");
-            let mut f = BufReader::new(f);
-            f.read_to_string(&mut str_in).expect("file read error");
-
-            let f = File::create(&args[2]).expect("open error");
-            let mut f = BufWriter::new(f);
-            analyze(str_in, &mut f).expect("lexcal analyzer failed.");
-        }
-        _ => return,
+    let mut reader: Box<dyn BufRead> = match env::args().nth(1) {
+        None => Box::new(BufReader::new(stdin())),
+        Some(filename) => Box::new(BufReader::new(
+            File::open(filename).expect("cannot open file"),
+        )),
     };
+
+    let mut writer: Box<dyn Write> = match env::args().nth(2) {
+        None => Box::new(BufWriter::new(stdout())),
+        Some(filename) => Box::new(BufWriter::new(
+            File::create(filename).expect("cannot create file"),
+        )),
+    };
+
+    let mut str_in = String::new();
+    reader
+        .read_to_string(&mut str_in)
+        .expect("cannot read source code");
+
+    analyze(str_in, &mut writer).expect("lexcal analyzer failed.");
 }
