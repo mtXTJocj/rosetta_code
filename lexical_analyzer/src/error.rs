@@ -9,6 +9,7 @@ pub enum ErrorKind {
     ReadError,
     LexicalAnalyzerError,
     SyntaxError,
+    InterpretationError,
 }
 
 #[derive(Debug)]
