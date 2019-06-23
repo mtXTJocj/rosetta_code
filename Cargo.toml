@@ -6,4 +6,5 @@ members = [
     "execute_brainxxxx",
     "lexical_analyzer",
     "syntax_analyzer",
+    "ast_interpreter",
 ]
