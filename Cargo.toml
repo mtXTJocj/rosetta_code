@@ -7,4 +7,5 @@ members = [
     "lexical_analyzer",
     "syntax_analyzer",
     "ast_interpreter",
+    "code_generator",
 ]
