@@ -10,6 +10,7 @@ pub enum ErrorKind {
     LexicalAnalyzerError,
     SyntaxError,
     InterpretationError,
+    CodeGenerationError,
 }
 
 #[derive(Debug)]
