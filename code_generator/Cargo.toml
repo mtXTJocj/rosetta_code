@@ -1,0 +1,10 @@
+[package]
+name = "code_generator"
+version = "0.1.0"
+authors = ["mtXTJocj <mtXTJocj@yahoo.co.jp>"]
+edition = "2018"
+
+[dependencies]
+lexical_analyzer = {path="../lexical_analyzer"}
+syntax_analyzer = {path="../syntax_analyzer"}
+
