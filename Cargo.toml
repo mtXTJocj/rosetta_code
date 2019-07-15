@@ -8,4 +8,5 @@ members = [
     "syntax_analyzer",
     "ast_interpreter",
     "code_generator",
+    "virtual_machine_interpreter",
 ]
