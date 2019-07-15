@@ -11,6 +11,7 @@ pub enum ErrorKind {
     SyntaxError,
     InterpretationError,
     CodeGenerationError,
+    VirtualMachineError,
 }
 
 #[derive(Debug)]
